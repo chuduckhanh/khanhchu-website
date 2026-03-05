@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toán 3 – Chu vi hình chữ nhật | Chân Trời Sáng Tạo Tập 2 Tr.38</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1565C0;--light-blue:#E3F2FD;--green:#2E7D32;--light-green:#E8F5E9;
+  --orange:#E65100;--light-orange:#FFF3E0;--purple:#6A1B9A;--light-purple:#F3E5F5;
+  --red:#C62828;--gold:#F9A825;--white:#fff;--gray:#f5f5f5;--dark:#212121;
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1565C0 0%,#283593 100%);min-height:100vh;color:var(--dark);font-size:22px}
+/* SCREENS */
+.screen{display:none;min-height:100vh;padding:20px;animation:fadeIn .4s ease}
+.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+/* HEADER COMMON */
+.top-bar{width:100%;max-width:900px;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.btn-back{background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:12px;padding:10px 18px;cursor:pointer;font-size:1em;transition:.2s}
+.btn-back:hover{background:rgba(255,255,255,.35)}
+.bar-title{color:#fff;font-size:1.5em;font-weight:700;flex:1;text-align:center}
+/* HOME SCREEN */
+#homeScreen{background:linear-gradient(135deg,#1565C0,#283593)}
+.home-header{text-align:center;color:#fff;margin-bottom:32px}
+.home-header h1{font-size:clamp(2em,4vw,3em);font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+.home-header p{font-size:1.1em;opacity:.85;margin-top:8px}
+.badge{display:inline-block;background:var(--gold);color:#333;border-radius:20px;padding:4px 14px;font-size:.85em;font-weight:700;margin-top:8px}
+/* MENU CARDS */
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;width:100%;max-width:900px}
+.menu-card{background:#fff;border-radius:20px;padding:28px 20px;text-align:center;cursor:pointer;
+  box-shadow:0 8px 24px rgba(0,0,0,.18);transition:transform .2s,box-shadow .2s;
+  perspective:600px;position:relative;overflow:hidden}
+.menu-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--c,#1565C0)}
+.menu-card:hover{transform:translateY(-6px) rotateX(4deg);box-shadow:0 16px 40px rgba(0,0,0,.25)}
+.card-icon{font-size:2.8em;margin-bottom:12px}
+.card-title{font-size:1.15em;font-weight:700;color:var(--dark);margin-bottom:6px}
+.card-sub{font-size:.88em;color:#666;margin-bottom:10px}
+.card-count{background:var(--gray);border-radius:20px;display:inline-block;padding:3px 12px;font-size:.82em;font-weight:600;color:#555}
+/* THEORY SCREEN */
+#theoryScreen{background:linear-gradient(135deg,#1a237e,#283593);align-items:center;justify-content:center}
+.theory-box{background:#fff;border-radius:20px;padding:28px;width:100%;max-width:800px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.theory-box h2{color:var(--blue);font-size:1.6em;margin-bottom:18px;border-bottom:4px solid var(--light-blue);padding-bottom:12px}
+.formula-card{background:var(--light-blue);border-left:6px solid var(--blue);border-radius:14px;padding:24px 22px;margin:14px 0;font-size:1.15em;line-height:1.8}
+.formula-card .formula{font-size:1.9em;font-weight:900;color:var(--blue);text-align:center;margin:14px 0;letter-spacing:1px}
+.example-card{background:var(--light-green);border-left:6px solid var(--green);border-radius:14px;padding:22px;margin:14px 0}
+.example-card h3{color:var(--green);margin-bottom:12px;font-size:1.2em}
+.step{background:#fff;border-radius:10px;padding:14px 18px;margin:8px 0;font-size:1.1em;font-weight:500}
+.rect-vis{display:flex;justify-content:center;margin:16px 0}
+.rect-svg{border:4px solid var(--blue);background:rgba(21,101,192,.08);border-radius:6px;position:relative;display:flex;align-items:center;justify-content:center;color:var(--blue);font-weight:700;font-size:.95em}
+/* QUIZ SCREEN */
+#quizScreen{background:linear-gradient(135deg,#1b5e20,#2e7d32)}
+.quiz-wrapper{width:100%;max-width:860px}
+.progress-bar-wrap{background:rgba(255,255,255,.2);border-radius:10px;height:10px;margin-bottom:18px;overflow:hidden}
+.progress-bar-fill{height:100%;background:var(--gold);border-radius:10px;transition:width .4s}
+.quiz-card{background:#fff;border-radius:20px;padding:32px;box-shadow:0 8px 28px rgba(0,0,0,.2);min-height:400px;display:flex;flex-direction:column;justify-content:space-between}
+.q-num{color:var(--blue);font-size:.9em;font-weight:600;margin-bottom:8px}
+.q-text{font-size:clamp(1.3em,2.5vw,1.75em);font-weight:700;line-height:1.6;color:var(--dark);margin-bottom:22px;flex:1}
+.q-hint{background:var(--light-orange);border-radius:10px;padding:10px 14px;font-size:.9em;color:var(--orange);margin-bottom:14px;display:none}
+/* MC OPTIONS */
+.mc-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mc-btn{background:var(--gray);border:2px solid #e0e0e0;border-radius:14px;padding:18px 22px;font-size:1.1em;cursor:pointer;text-align:left;transition:.2s;font-weight:500}
+.mc-btn:hover:not(:disabled){background:var(--light-blue);border-color:var(--blue)}
+.mc-btn.correct{background:var(--light-green)!important;border-color:var(--green)!important;color:var(--green)}
+.mc-btn.wrong{background:#ffebee!important;border-color:var(--red)!important;color:var(--red)}
+/* FILL INPUT */
+.fill-area{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.fill-input{border:3px solid #bbb;border-radius:12px;padding:16px 20px;font-size:1.5em;width:170px;text-align:center;font-weight:700;transition:.2s}
+.fill-input:focus{outline:none;border-color:var(--blue)}
+.fill-input.correct{border-color:var(--green);background:var(--light-green);color:var(--green)}
+.fill-input.wrong{border-color:var(--red);background:#ffebee;color:var(--red)}
+.fill-unit{font-size:1.1em;font-weight:600;color:#555}
+/* FEEDBACK */
+.feedback{border-radius:14px;padding:14px 18px;font-size:1em;margin-top:12px;display:none;animation:popIn .3s ease}
+.feedback.correct{background:var(--light-green);border:2px solid var(--green);color:var(--green)}
+.feedback.wrong{background:#ffebee;border:2px solid var(--red);color:var(--red)}
+@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.btn-check{background:var(--blue);color:#fff;border:none;border-radius:14px;padding:14px 36px;font-size:1.05em;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s;width:100%}
+.btn-check:hover{background:#1976D2}
+.btn-check:disabled{background:#bbb;cursor:not-allowed}
+.btn-next{background:var(--green);color:#fff;border:none;border-radius:14px;padding:14px 36px;font-size:1.05em;font-weight:700;cursor:pointer;margin-top:10px;transition:.2s;width:100%;display:none}
+.btn-next:hover{background:#388E3C}
+/* SCORE SCREEN */
+#scoreScreen{background:linear-gradient(135deg,#F57F17,#F9A825)}
+.score-card{background:#fff;border-radius:24px;padding:48px 36px;text-align:center;width:100%;max-width:600px;box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.score-emoji{font-size:5em;margin-bottom:16px}
+.score-title{font-size:2em;font-weight:800;color:var(--dark);margin-bottom:8px}
+.score-num{font-size:3.5em;font-weight:900;color:var(--blue);margin:10px 0}
+.score-msg{font-size:1.1em;color:#555;margin-bottom:28px}
+.btn-replay{background:var(--blue);color:#fff;border:none;border-radius:14px;padding:16px 40px;font-size:1.1em;font-weight:700;cursor:pointer;margin:6px;transition:.2s}
+.btn-replay:hover{background:#1565C0;transform:scale(1.03)}
+.btn-home{background:var(--gray);color:var(--dark);border:none;border-radius:14px;padding:16px 40px;font-size:1.1em;font-weight:700;cursor:pointer;margin:6px;transition:.2s}
+/* GAME SCREEN */
+#gameScreen{background:linear-gradient(135deg,#4a148c,#6a1b9a)}
+.game-area{width:100%;max-width:800px}
+.game-card{background:#fff;border-radius:20px;padding:30px;box-shadow:0 8px 28px rgba(0,0,0,.2);margin-bottom:16px}
+.game-title{color:var(--purple);font-size:1.3em;font-weight:700;margin-bottom:16px;text-align:center}
+.fence-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.fence-item{background:var(--gray);border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;border:2px solid #e0e0e0;transition:.2s;position:relative}
+.fence-item:hover{border-color:var(--purple);background:var(--light-purple)}
+.fence-item.selected{border-color:var(--purple);background:var(--light-purple)}
+.fence-item.matched{border-color:var(--green);background:var(--light-green);cursor:default}
+.fence-item.wrong-anim{animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.fence-rect{width:80px;height:44px;border:3px solid var(--blue);background:var(--light-blue);border-radius:6px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:.82em;color:var(--blue);font-weight:700}
+.answer-choices{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.ans-chip{background:var(--light-purple);border:2px solid var(--purple);border-radius:30px;padding:10px 22px;font-size:1em;font-weight:700;cursor:pointer;transition:.2s;color:var(--purple)}
+.ans-chip:hover{background:var(--purple);color:#fff}
+.ans-chip.used{opacity:.35;pointer-events:none}
+/* CONFETTI */
+#confettiCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999}
+/* SCORE DISPLAY */
+.score-display{background:rgba(255,255,255,.15);color:#fff;border-radius:20px;padding:6px 18px;font-weight:700;font-size:1em}
+</style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- ===== HOME ===== -->
+<div id="homeScreen" class="screen active">
+  <div class="home-header">
+    <div style="font-size:3em;margin-bottom:8px">📐</div>
+    <h1>Chu Vi Hình Chữ Nhật</h1>
+    <p>Toán 3 · Chân Trời Sáng Tạo · Tập 2 · Trang 38</p>
+    <div class="badge">📚 Lớp 3C</div>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card" style="--c:#1565C0" onclick="goScreen('theoryScreen')">
+      <div class="card-icon">📖</div>
+      <div class="card-title">Kiến Thức</div>
+      <div class="card-sub">Công thức & ví dụ minh hoạ</div>
+      <div class="card-count">📌 Lý thuyết</div>
+    </div>
+    <div class="menu-card" style="--c:#2E7D32" onclick="startQuiz('mc')">
+      <div class="card-icon">✏️</div>
+      <div class="card-title">Bài Tập Trắc Nghiệm</div>
+      <div class="card-sub">Chọn đáp án đúng</div>
+      <div class="card-count">6 câu hỏi</div>
+    </div>
+    <div class="menu-card" style="--c:#E65100" onclick="startQuiz('fill')">
+      <div class="card-icon">🔢</div>
+      <div class="card-title">Điền Số Vào Ô</div>
+      <div class="card-sub">Tính chu vi & điền kết quả</div>
+      <div class="card-count">6 câu hỏi</div>
+    </div>
+    <div class="menu-card" style="--c:#6A1B9A" onclick="goScreen('gameScreen')">
+      <div class="card-icon">🎮</div>
+      <div class="card-title">Trò Chơi Ghép Đôi</div>
+      <div class="card-sub">Ghép hình với chu vi đúng</div>
+      <div class="card-count">6 hình</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== THEORY ===== -->
+<div id="theoryScreen" class="screen" style="overflow-y:auto;padding:24px 20px">
+  <div class="top-bar" style="max-width:800px">
+    <button class="btn-back" onclick="goScreen('homeScreen')">← Trang chủ</button>
+    <div class="bar-title">📖 Lý Thuyết</div>
+  </div>
+  <div class="theory-box" style="max-width:1060px">
+    <h2>📐 Chu vi hình chữ nhật là gì?</h2>
+    <div class="formula-card">
+      Chu vi hình chữ nhật là tổng độ dài của tất cả các cạnh xung quanh hình đó.
+      <div class="formula">C = (a + b) × 2</div>
+      Trong đó: <strong>a</strong> là chiều dài, <strong>b</strong> là chiều rộng (cùng đơn vị đo).
+    </div>
+    <div class="formula-card" style="background:var(--light-purple);border-color:var(--purple)">
+      <strong style="color:var(--purple)">⭐ Nửa chu vi</strong> hình chữ nhật bằng tổng chiều dài và chiều rộng:
+      <div class="formula" style="color:var(--purple)">Nửa C = a + b</div>
+    </div>
+
+    <!-- ILLUSTRATION 1: Rectangle with labels -->
+    <div style="background:linear-gradient(135deg,#E3F2FD,#BBDEFB);border-radius:18px;padding:28px 20px;margin:18px 0;text-align:center">
+      <div style="font-size:1.1em;font-weight:700;color:#1565C0;margin-bottom:16px">📐 Hình chữ nhật và các cạnh</div>
+      <svg viewBox="0 0 500 240" style="width:100%;max-width:560px;height:auto" xmlns="http://www.w3.org/2000/svg">
+        <!-- Rectangle -->
+        <rect x="80" y="40" width="340" height="160" rx="8" fill="#E3F2FD" stroke="#1565C0" stroke-width="5"/>
+        <!-- Top arrow -->
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <polygon points="0,0 8,4 0,8" fill="#E65100"/>
+          </marker>
+          <marker id="arrl" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse">
+            <polygon points="0,0 8,4 0,8" fill="#E65100"/>
+          </marker>
+        </defs>
+        <!-- chiều dài top label -->
+        <line x1="90" y1="22" x2="410" y2="22" stroke="#E65100" stroke-width="2.5" marker-end="url(#arr)" marker-start="url(#arrl)"/>
+        <rect x="200" y="8" width="100" height="28" rx="6" fill="#FFF3E0"/>
+        <text x="250" y="27" text-anchor="middle" font-size="16" font-weight="bold" fill="#E65100">chiều dài (a)</text>
+        <!-- chiều rộng right label -->
+        <line x1="428" y1="50" x2="428" y2="190" stroke="#2E7D32" stroke-width="2.5" marker-end="url(#arr)" marker-start="url(#arrl)"/>
+        <rect x="432" y="105" width="62" height="28" rx="6" fill="#E8F5E9"/>
+        <text x="463" y="124" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E7D32">rộng (b)</text>
+        <!-- side labels on rectangle -->
+        <text x="250" y="132" text-anchor="middle" font-size="17" font-weight="bold" fill="#1565C0">a</text>
+        <text x="250" y="175" text-anchor="middle" font-size="17" font-weight="bold" fill="#1565C0">a</text>
+        <text x="105" y="127" text-anchor="middle" font-size="17" font-weight="bold" fill="#1565C0">b</text>
+        <text x="395" y="127" text-anchor="middle" font-size="17" font-weight="bold" fill="#1565C0">b</text>
+        <!-- corners dots -->
+        <circle cx="80" cy="40" r="6" fill="#1565C0"/>
+        <circle cx="420" cy="40" r="6" fill="#1565C0"/>
+        <circle cx="80" cy="200" r="6" fill="#1565C0"/>
+        <circle cx="420" cy="200" r="6" fill="#1565C0"/>
+      </svg>
+      <div style="background:#fff;border-radius:12px;padding:12px 16px;display:inline-block;margin-top:10px;font-size:1em;color:#555">
+        Hình chữ nhật có <strong style="color:#E65100">2 chiều dài (a)</strong> và <strong style="color:#2E7D32">2 chiều rộng (b)</strong>
+      </div>
+    </div>
+
+    <!-- ILLUSTRATION 2: Perimeter = walking around -->
+    <div style="background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border-radius:18px;padding:28px 20px;margin:18px 0;text-align:center">
+      <div style="font-size:1.1em;font-weight:700;color:#2E7D32;margin-bottom:16px">🚶 Chu vi = đi quanh 4 cạnh</div>
+      <svg viewBox="0 0 500 210" style="width:100%;max-width:560px;height:auto" xmlns="http://www.w3.org/2000/svg">
+        <!-- Rectangle with dashed animated perimeter -->
+        <rect x="80" y="30" width="340" height="150" rx="8" fill="#F1F8E9" stroke="#43A047" stroke-width="6" stroke-dasharray="16,6"/>
+        <!-- Labels on sides -->
+        <text x="250" y="22" text-anchor="middle" font-size="19" font-weight="bold" fill="#E65100">8 cm</text>
+        <text x="250" y="200" text-anchor="middle" font-size="19" font-weight="bold" fill="#E65100">8 cm</text>
+        <text x="45" y="112" text-anchor="middle" font-size="19" font-weight="bold" fill="#2E7D32">5 cm</text>
+        <text x="455" y="112" text-anchor="middle" font-size="19" font-weight="bold" fill="#2E7D32">5 cm</text>
+        <!-- Walker emoji -->
+        <text x="84" y="66" font-size="26">🏃</text>
+        <!-- arrows showing direction -->
+        <path d="M110,36 Q250,10 410,36" stroke="#F9A825" stroke-width="3" fill="none" marker-end="url(#arr2)" stroke-dasharray="8,4"/>
+        <defs>
+          <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <polygon points="0,0 8,4 0,8" fill="#F9A825"/>
+          </marker>
+        </defs>
+      </svg>
+      <div style="background:#fff;border-radius:12px;padding:14px 20px;display:inline-block;margin-top:4px;font-size:1.05em">
+        C = 8 + 5 + 8 + 5 = <strong style="color:#2E7D32;font-size:1.2em">(8 + 5) × 2 = 26 cm</strong>
+      </div>
+    </div>
+
+    <!-- ILLUSTRATION 3: Garden fence context -->
+    <div style="background:linear-gradient(135deg,#FFF8E1,#FFE082);border-radius:18px;padding:24px 20px;margin:18px 0;text-align:center">
+      <div style="font-size:1.1em;font-weight:700;color:#E65100;margin-bottom:14px">🌱 Ví dụ thực tế: Rào vườn hoa</div>
+      <svg viewBox="0 0 500 220" style="width:100%;max-width:560px;height:auto" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grass -->
+        <rect x="60" y="50" width="380" height="150" rx="10" fill="#A5D6A7"/>
+        <!-- Fence -->
+        <rect x="60" y="50" width="380" height="150" rx="10" fill="none" stroke="#795548" stroke-width="8"/>
+        <!-- Fence posts -->
+        <line x1="140" y1="50" x2="140" y2="200" stroke="#795548" stroke-width="6"/>
+        <line x1="220" y1="50" x2="220" y2="200" stroke="#795548" stroke-width="6"/>
+        <line x1="300" y1="50" x2="300" y2="200" stroke="#795548" stroke-width="6"/>
+        <line x1="380" y1="50" x2="380" y2="200" stroke="#795548" stroke-width="6"/>
+        <line x1="60" y1="110" x2="440" y2="110" stroke="#795548" stroke-width="4"/>
+        <!-- flowers -->
+        <text x="100" y="165" font-size="28">🌸</text>
+        <text x="180" y="165" font-size="28">🌻</text>
+        <text x="260" y="165" font-size="28">🌹</text>
+        <text x="340" y="165" font-size="28">🌼</text>
+        <text x="100" y="100" font-size="22">🌿</text>
+        <text x="340" y="100" font-size="22">🌿</text>
+        <!-- Dimension labels -->
+        <text x="250" y="38" text-anchor="middle" font-size="18" font-weight="bold" fill="#E65100">12 m</text>
+        <text x="470" y="132" text-anchor="middle" font-size="18" font-weight="bold" fill="#1565C0">7 m</text>
+      </svg>
+      <div style="background:#fff;border-radius:12px;padding:14px 20px;display:inline-block;margin-top:8px;font-size:1.05em">
+        Cần bao nhiêu mét hàng rào? → C = (12 + 7) × 2 = <strong style="color:#E65100;font-size:1.2em">38 m</strong>
+      </div>
+    </div>
+    <div style="background:#fff7e6;border-left:5px solid var(--gold);border-radius:12px;padding:14px 18px;margin:12px 0;font-size:.95em;color:#555">
+      📣 Cô giáo nhắc nhở: <em>"Muốn tính chu vi hình chữ nhật, ta lấy chiều dài cộng với chiều rộng (cùng đơn vị đo) rồi nhân cho 2."</em>
+    </div>
+  </div>
+  <div class="theory-box" style="max-width:1060px">
+    <h2>📝 Ví Dụ Minh Hoạ</h2>
+    <div class="example-card">
+      <h3>Ví dụ 1</h3>
+      Hình chữ nhật có chiều dài <strong>8 cm</strong>, chiều rộng <strong>5 cm</strong>. Tính chu vi.
+      <div class="step">Chu vi = (8 + 5) × 2 = 13 × 2 = <strong>26 cm</strong></div>
+    </div>
+    <div class="example-card">
+      <h3>Ví dụ 2</h3>
+      Hình chữ nhật có chu vi <strong>40 cm</strong>, chiều dài <strong>12 cm</strong>. Tính chiều rộng.
+      <div class="step">Nửa chu vi = 40 ÷ 2 = 20 cm</div>
+      <div class="step">Chiều rộng = 20 − 12 = <strong>8 cm</strong></div>
+    </div>
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn-check" style="width:auto;padding:12px 36px" onclick="startQuiz('mc')">🚀 Bắt đầu luyện tập →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div id="quizScreen" class="screen">
+  <div class="top-bar">
+    <button class="btn-back" onclick="goScreen('homeScreen')">← Trang chủ</button>
+    <div class="bar-title" id="quizTitle">Bài Tập</div>
+    <div class="score-display" id="liveScore">⭐ 0</div>
+  </div>
+  <div class="quiz-wrapper">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="quiz-card" id="quizCard">
+      <div>
+        <div class="q-num" id="qNum"></div>
+        <div class="q-text" id="qText"></div>
+        <div class="q-hint" id="qHint"></div>
+        <div id="qOptions"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+      <div>
+        <button class="btn-check" id="btnCheck" onclick="checkAnswer()">✔ Kiểm tra</button>
+        <button class="btn-next" id="btnNext" onclick="nextQuestion()">Câu tiếp theo →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCORE ===== -->
+<div id="scoreScreen" class="screen">
+  <div class="score-card">
+    <div class="score-emoji" id="scoreEmoji">🎉</div>
+    <div class="score-title" id="scoreTitle">Xuất sắc!</div>
+    <div class="score-num" id="scoreNum">6/6</div>
+    <div class="score-msg" id="scoreMsg">Bạn đã trả lời đúng tất cả các câu!</div>
+    <div>
+      <button class="btn-replay" onclick="replayQuiz()">🔄 Làm lại</button>
+      <button class="btn-home" onclick="goScreen('homeScreen')">🏠 Trang chủ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GAME ===== -->
+<div id="gameScreen" class="screen">
+  <div class="top-bar">
+    <button class="btn-back" onclick="goScreen('homeScreen')">← Trang chủ</button>
+    <div class="bar-title">🎮 Trò Chơi Ghép Đôi</div>
+    <div class="score-display" id="gameScore">✅ 0/6</div>
+  </div>
+  <div class="game-area">
+    <div class="game-card">
+      <div class="game-title">🏠 Chọn hình → chọn chu vi đúng!</div>
+      <div class="fence-grid" id="fenceGrid"></div>
+      <div style="margin-top:14px;font-weight:600;color:#555;text-align:center">Đáp án:</div>
+      <div class="answer-choices" id="answerChoices"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======= AUDIO =======
+const AC = new (window.AudioContext||window.webkitAudioContext)();
+function beep(freq,dur,type='sine'){
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.connect(g);g.connect(AC.destination);
+  o.type=type;o.frequency.value=freq;
+  g.gain.setValueAtTime(.3,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.start();o.stop(AC.currentTime+dur);
+}
+function playCorrect(){beep(523,.1);setTimeout(()=>beep(659,.1),120);setTimeout(()=>beep(784,.2),240)}
+function playWrong(){beep(220,.3,'square')}
+function playWin(){[523,587,659,698,784].forEach((f,i)=>setTimeout(()=>beep(f,.15),i*130))}
+
+// ======= CONFETTI =======
+const cv=document.getElementById('confettiCanvas');
+const ctx=cv.getContext('2d');
+let pieces=[];
+function launchConfetti(){
+  cv.width=innerWidth;cv.height=innerHeight;
+  const colors=['#1565C0','#2E7D32','#F9A825','#6A1B9A','#E65100','#C62828','#fff'];
+  for(let i=0;i<120;i++) pieces.push({
+    x:Math.random()*cv.width,y:-10,vx:(Math.random()-0.5)*6,vy:Math.random()*5+3,
+    color:colors[~~(Math.random()*colors.length)],w:Math.random()*12+5,h:Math.random()*6+3,
+    rot:Math.random()*360,rv:(Math.random()-0.5)*8
+  });
+  animConfetti();
+}
+function animConfetti(){
+  if(!pieces.length)return;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  pieces=pieces.filter(p=>p.y<cv.height+20);
+  pieces.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.rv;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+    ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();
+  });
+  if(pieces.length)requestAnimationFrame(animConfetti);
+  else ctx.clearRect(0,0,cv.width,cv.height);
+}
+
+// ======= NAV =======
+function goScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ======= QUIZ DATA =======
+const mcQuestions=[
+  {q:'Công thức nào dùng để tính chu vi hình chữ nhật?',
+   opts:['C = a × b','C = (a + b) × 2','C = a + b','C = 2 × a × b'],
+   ans:1,hint:'Chu vi = tổng độ dài 4 cạnh = chiều dài + chiều rộng + chiều dài + chiều rộng'},
+  {q:'Hình chữ nhật có chiều dài 8 cm, chiều rộng 5 cm. Chu vi là:',
+   opts:['26 cm','13 cm','40 cm','30 cm'],ans:0,hint:'C = (8 + 5) × 2 = ?'},
+  {q:'Nửa chu vi hình chữ nhật có ý nghĩa gì?',
+   opts:['Tích chiều dài và chiều rộng','Tổng chiều dài và chiều rộng','Hiệu chiều dài và chiều rộng','Chu vi chia cho 4'],
+   ans:1,hint:'Nửa chu vi = C ÷ 2 = (a + b) × 2 ÷ 2 = a + b'},
+  {q:'Hình chữ nhật có chiều dài 12 m, chiều rộng 7 m. Chu vi là:',
+   opts:['84 m','38 m','19 m','34 m'],ans:1,hint:'C = (12 + 7) × 2 = ?'},
+  {q:'Hình chữ nhật có chu vi 40 cm, chiều dài 12 cm. Chiều rộng là:',
+   opts:['28 cm','8 cm','16 cm','20 cm'],ans:1,hint:'Nửa CV = 40÷2 = 20; Chiều rộng = 20 − 12 = ?'},
+  {q:'Hình chữ nhật có chiều dài 15 cm, chiều rộng 9 cm. Nửa chu vi là:',
+   opts:['135 cm','24 cm','12 cm','48 cm'],ans:1,hint:'Nửa chu vi = 15 + 9 = ?'},
+];
+const fillQuestions=[
+  {q:'Hình chữ nhật có chiều dài <strong>6 cm</strong>, chiều rộng <strong>4 cm</strong>. Chu vi là:',
+   ans:20,unit:'cm',hint:'C = (6 + 4) × 2'},
+  {q:'Hình chữ nhật có chiều dài <strong>10 m</strong>, chiều rộng <strong>5 m</strong>. Chu vi là:',
+   ans:30,unit:'m',hint:'C = (10 + 5) × 2'},
+  {q:'Hình chữ nhật có chiều dài <strong>9 dm</strong>, chiều rộng <strong>3 dm</strong>. Chu vi là:',
+   ans:24,unit:'dm',hint:'C = (9 + 3) × 2'},
+  {q:'Hình chữ nhật có chu vi <strong>36 cm</strong>, chiều dài <strong>11 cm</strong>. Chiều rộng là:',
+   ans:7,unit:'cm',hint:'Nửa CV = 36÷2 = 18; Chiều rộng = 18 − 11'},
+  {q:'Hình chữ nhật có chiều dài <strong>14 m</strong>, chiều rộng <strong>6 m</strong>. Chu vi là:',
+   ans:40,unit:'m',hint:'C = (14 + 6) × 2'},
+  {q:'Hình chữ nhật có nửa chu vi là <strong>13 cm</strong>, chiều rộng <strong>5 cm</strong>. Chiều dài là:',
+   ans:8,unit:'cm',hint:'Chiều dài = nửa CV − chiều rộng = 13 − 5'},
+];
+
+// ======= QUIZ LOGIC =======
+let qMode='mc',qData=[],qIdx=0,score=0,selected=null,currentQuizData=[];
+function startQuiz(mode){
+  qMode=mode;
+  qData=mode==='mc'?[...mcQuestions]:[...fillQuestions];
+  // shuffle
+  for(let i=qData.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[qData[i],qData[j]]=[qData[j],qData[i]];}
+  qIdx=0;score=0;selected=null;currentQuizData=qData;
+  document.getElementById('quizTitle').textContent=mode==='mc'?'✏️ Trắc Nghiệm':'🔢 Điền Số';
+  document.getElementById('liveScore').textContent='⭐ 0';
+  goScreen('quizScreen');
+  renderQuestion();
+}
+function renderQuestion(){
+  const q=qData[qIdx];
+  const total=qData.length;
+  document.getElementById('qNum').textContent=`Câu ${qIdx+1} / ${total}`;
+  document.getElementById('progressFill').style.width=`${(qIdx/total)*100}%`;
+  document.getElementById('qText').innerHTML=q.q;
+  document.getElementById('qHint').style.display='none';
+  document.getElementById('qHint').textContent='💡 Gợi ý: '+q.hint;
+  document.getElementById('feedback').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').style.display='block';
+  document.getElementById('btnNext').style.display='none';
+  selected=null;
+  if(qMode==='mc'){
+    let html='<div class="mc-options">';
+    q.opts.forEach((o,i)=>html+=`<button class="mc-btn" id="opt${i}" onclick="selectMC(${i})">${o}</button>`);
+    html+='</div>';
+    document.getElementById('qOptions').innerHTML=html;
+    document.getElementById('btnCheck').disabled=true;
+  } else {
+    document.getElementById('qOptions').innerHTML=`
+      <div class="fill-area">
+        <input type="number" class="fill-input" id="fillAns" placeholder="?" onkeyup="if(event.key==='Enter')checkAnswer()">
+        <span class="fill-unit">${q.unit}</span>
+      </div>`;
+    document.getElementById('btnCheck').disabled=false;
+    setTimeout(()=>{const el=document.getElementById('fillAns');if(el)el.focus();},100);
+  }
+}
+function selectMC(i){
+  document.querySelectorAll('.mc-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('opt'+i).style.background='#E3F2FD';
+  document.getElementById('opt'+i).style.borderColor='#1565C0';
+  selected=i;
+  document.getElementById('btnCheck').disabled=false;
+}
+function checkAnswer(){
+  const q=qData[qIdx];
+  const fb=document.getElementById('feedback');
+  if(qMode==='mc'){
+    if(selected===null)return;
+    document.querySelectorAll('.mc-btn').forEach(b=>{b.disabled=true;b.style.background='';b.style.borderColor='';});
+    const correct=selected===q.ans;
+    document.getElementById('opt'+q.ans).classList.add('correct');
+    if(!correct){document.getElementById('opt'+selected).classList.add('wrong');playWrong();}
+    else{score++;playCorrect();}
+    fb.className='feedback '+(correct?'correct':'wrong');
+    fb.textContent=correct?'✅ Chính xác! Giỏi lắm!':'❌ Chưa đúng. '+q.hint;
+    document.getElementById('qHint').style.display=correct?'none':'block';
+  } else {
+    const val=parseInt(document.getElementById('fillAns').value);
+    const inp=document.getElementById('fillAns');
+    inp.disabled=true;
+    if(val===q.ans){score++;inp.classList.add('correct');playCorrect();fb.className='feedback correct';fb.textContent='✅ Đúng rồi! Tuyệt vời!';}
+    else{inp.classList.add('wrong');playWrong();fb.className='feedback wrong';fb.textContent=`❌ Chưa đúng. Đáp án đúng: ${q.ans} ${q.unit}. ${q.hint}`;}
+  }
+  document.getElementById('liveScore').textContent=`⭐ ${score}`;
+  fb.style.display='block';
+  document.getElementById('btnCheck').style.display='none';
+  document.getElementById('btnNext').style.display='block';
+}
+function nextQuestion(){
+  qIdx++;
+  if(qIdx>=qData.length){showScore();}
+  else{renderQuestion();}
+}
+function showScore(){
+  const total=qData.length;
+  const pct=score/total;
+  let emoji,title,msg;
+  if(pct===1){emoji='🏆';title='Xuất Sắc!';msg='Bạn trả lời đúng tất cả! Tuyệt vời!';launchConfetti();playWin();}
+  else if(pct>=0.7){emoji='🌟';title='Giỏi!';msg=`Bạn đúng ${score}/${total} câu. Cố gắng thêm nhé!`;playCorrect();}
+  else{emoji='💪';title='Cố Lên!';msg=`Bạn đúng ${score}/${total} câu. Ôn lại lý thuyết nhé!`;}
+  document.getElementById('scoreEmoji').textContent=emoji;
+  document.getElementById('scoreTitle').textContent=title;
+  document.getElementById('scoreNum').textContent=`${score}/${total}`;
+  document.getElementById('scoreMsg').textContent=msg;
+  goScreen('scoreScreen');
+}
+function replayQuiz(){startQuiz(qMode);}
+
+// ======= GAME =======
+const gameRects=[
+  {a:6,b:4,c:20},{a:8,b:5,c:26},{a:10,b:3,c:26},{a:12,b:7,c:38},
+  {a:9,b:6,c:30},{a:15,b:4,c:38}
+];
+// recalculate correctly
+gameRects.forEach(r=>r.c=(r.a+r.b)*2);
+let gmMatched=0,gmSelected=null;
+function initGame(){
+  gmMatched=0;gmSelected=null;
+  document.getElementById('gameScore').textContent='✅ 0/6';
+  const grid=document.getElementById('fenceGrid');
+  grid.innerHTML='';
+  gameRects.forEach((r,i)=>{
+    grid.innerHTML+=`
+    <div class="fence-item" id="fi${i}" onclick="selectFence(${i})">
+      <div class="fence-rect">${r.a}×${r.b}</div>
+      <div style="font-size:.88em;color:#555">Dài: ${r.a} | Rộng: ${r.b}</div>
+    </div>`;
+  });
+  // shuffle answer choices
+  const answers=[...new Set(gameRects.map(r=>r.c))].sort(()=>Math.random()-.5);
+  // also include correct answers with possible duplicates shown once
+  const allAns=[...new Set(gameRects.map(r=>r.c))];
+  const ch=document.getElementById('answerChoices');
+  ch.innerHTML='';
+  allAns.sort(()=>Math.random()-.5).forEach(v=>{
+    ch.innerHTML+=`<div class="ans-chip" id="ac${v}" onclick="selectAnswer(${v})">${v} cm</div>`;
+  });
+}
+function selectFence(i){
+  if(document.getElementById('fi'+i).classList.contains('matched'))return;
+  document.querySelectorAll('.fence-item').forEach(f=>f.classList.remove('selected'));
+  document.getElementById('fi'+i).classList.add('selected');
+  gmSelected=i;
+  if(typeof gmAns!=='undefined')tryMatch();
+}
+let gmAns=undefined;
+function selectAnswer(v){
+  if(gmSelected===null||gmSelected===undefined)return;
+  gmAns=v;
+  const r=gameRects[gmSelected];
+  if(v===r.c){
+    document.getElementById('fi'+gmSelected).classList.remove('selected');
+    document.getElementById('fi'+gmSelected).classList.add('matched');
+    document.getElementById('fi'+gmSelected).innerHTML+=`<div style="color:var(--green);font-weight:700;font-size:.9em">✅ ${v} cm</div>`;
+    // disable answer chip if all of that value are matched
+    const remaining=gameRects.filter((_,i)=>!document.getElementById('fi'+i).classList.contains('matched')&&gameRects[i].c===v);
+    if(remaining.length===0){document.getElementById('ac'+v).classList.add('used');}
+    gmMatched++;playCorrect();
+    document.getElementById('gameScore').textContent=`✅ ${gmMatched}/6`;
+    if(gmMatched===6){launchConfetti();playWin();setTimeout(()=>alert('🎉 Xuất sắc! Bạn ghép đúng tất cả!'),400);}
+  } else {
+    document.getElementById('fi'+gmSelected).classList.add('wrong-anim');
+    setTimeout(()=>document.getElementById('fi'+gmSelected).classList.remove('wrong-anim'),400);
+    playWrong();
+  }
+  gmSelected=null;gmAns=undefined;
+  document.querySelectorAll('.fence-item').forEach(f=>f.classList.remove('selected'));
+}
+
+// init game when entering game screen
+const _goScreen=goScreen;
+window.goScreen=function(id){
+  _goScreen(id);
+  if(id==='gameScreen')initGame();
+};
+initGame();
+</script>
+</body>
+</html>
